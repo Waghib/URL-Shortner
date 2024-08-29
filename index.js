@@ -21,6 +21,7 @@ app.set('views', path.resolve('./views'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(express.static('public'));
 
 // app.get("/test", async (req, res) => {
 //     const allUrls = await URL.find({});
