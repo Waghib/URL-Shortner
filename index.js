@@ -30,11 +30,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.static('public'));
 app.use(cookieParser());
 
-// app.get("/test", async (req, res) => {
-//     const allUrls = await URL.find({});
-//     return res.render('home', {urls: allUrls});
-// });
 
+// Routes
 app.use('/url',restrictToLoggedinUserOnly, urlRoute);
 app.use('/', staticRoute);
 app.use('/user', userRoute);
