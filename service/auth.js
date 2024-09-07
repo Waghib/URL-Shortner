@@ -1,12 +1,27 @@
-const sessionIdToUserMap = new Map();
+// jwt authnetication
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const secret = process.env.SECRET_KEY;
 
-
-function setUser(id, User) {
-  sessionIdToUserMap.set(id, User);
+function setUser(user) {
+  return jwt.sign(
+    {
+      _id: user._id,
+      email: user.email,
+    }, secret);
 }
 
-function getUser(id) {
-  return sessionIdToUserMap.get(id);
+function getUser(token) {
+  if (!token) {
+    console.error("Token is missing");
+    return null;
+  }
+  try {
+    return jwt.verify(token, secret);
+  } catch (error) {
+    console.error("JWT Verification Error:", error);
+    return null;
+  }
 }
 
 module.exports = {
