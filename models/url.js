@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// Define the schema for the URL model
 const urlSchema = new mongoose.Schema({
     shortId: {
         type: String,

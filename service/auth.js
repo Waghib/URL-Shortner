@@ -3,6 +3,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET_KEY;
 
+// Setting JWT token for user
 function setUser(user) {
   return jwt.sign(
     {
@@ -11,6 +12,7 @@ function setUser(user) {
     }, secret);
 }
 
+// Handling JWT authentication of user
 function getUser(token) {
   if (!token) {
     console.error("Token is missing");
