@@ -38,24 +38,36 @@ app.use(cookieParser());
 app.use(checkForAuthentication);
 
 // Routes
-app.use('/url',restrictTo(["NORMAL"]) ,urlRoute);
+app.use('/url',restrictTo(["NORMAL", "ADMIN"]) ,urlRoute);
 app.use('/user', userRoute);
 app.use('/', staticRoute);
 
 // Redirect to the original URL
 app.get('/url/:shortId', async (req, res) => {
     const shortid = req.params.shortId;
-    const entry = await URL.findOneAndUpdate({
-        shortId: shortid
-        }, {
-            $push: {
-                visitHistory: {
-                    timestamp: Date.now()
+    try {
+        const entry = await URL.findOneAndUpdate(
+            { shortId: shortid },
+            {
+                $push: {
+                    visitHistory: {
+                        timestamp: Date.now()
+                    }
                 }
-            }
-        })
+            },
+            { new: true } // This option returns the updated document
+        );
+
+        if (!entry) {
+            return res.status(404).send('URL not found');
+        }
+
         res.redirect(entry.redirectUrl);
-    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
